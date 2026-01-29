@@ -1,0 +1,160 @@
+/*CREATE DATABASE ejercicio2;
+
+USE ejercicio2;
+
+CREATE TABLE marca
+(
+CodMar INT NOT NULL,
+NomMar VARCHAR(50) NOT NULL,
+PRIMARY KEY (CodMar)
+);
+
+CREATE TABLE modelo
+(
+CodMod INT NOT NULL,
+NomMod VARCHAR(50) NOT NULL,
+CodMar INT NOT NULL,
+PRIMARY KEY (CodMod),
+FOREIGN KEY (CodMar) REFERENCES marca(CodMar)
+);
+
+CREATE TABLE coche
+(
+CodCoc INT NOT NULL,
+MatCoc VARCHAR(8) NOT NULL UNIQUE,
+ColCoc VARCHAR(50) NOT NULL DEFAULT 'blanco',
+PueCoc TINYINT NOT NULL,
+CvCoc TINYINT  NOT NULL,
+CilCoc SMALLINT NOT NULL,
+AntCoc DATE NOT NULL,
+CodMod INT NOT NULL,
+PRIMARY KEY (CodCoc),
+FOREIGN KEY (CodMod) REFERENCES modelo(CodMod)
+);*/
+/*
+INSERT INTO marca (CodMar, NomMar)
+VALUES (1,'Audi'),
+(2,'Citroën'),
+(3,'Seat');
+
+INSERT INTO modelo (CodMod, NomMod, CodMar)
+VALUES (1,'A3',1),
+(2,'A4',1),
+(3,'A6',1),
+(4,'C3',2),
+(5,'C4',2),
+(6,'C5',2),
+(7,'Ibiza',3),
+(8,'León',3),
+(9,'Arona',3);
+
+INSERT INTO coche (CodCoc, MatCoc, ColCoc, PueCoc, AntCoc, CvCoc,
+CilCoc, CodMod)
+VALUES (1, '1234AAA', 'rojo', 5, '1995-09-30', 110, 1500, 8),
+(2, '1234AAB', DEFAULT, 11, '1998/03/15', 90, 1400, 4),
+(3, '1234AAC', 'amarillo', 3, '1999/12/07', 80, 2200, 7),
+(4, '1234AAD', 'gris', 5, '2008/05/13', 210, 1600, 1);
+*/
+
+
+SELECT * FROM coche;
+
+-- PRODUCTO CARTESIANO:  En la claúsula FROM hay tablas separadas ppor coma (,)
+-- SELECCIÓN: Usamos la cláusula WHERE 
+-- PROYECCIÓN: En la cláusula SELECT (*) -> Es TODO o sino solo el nombre de las columnas que quiera ver.
+
+SELECT NomMar, NomMod 
+FROM marca, modelo
+WHERE +marca.CodMar=modelo.CodMar;
+
+
+-- CONCATENACIÓN: En la cláusula FROM usamos JOIN
+/* PROYECCIÓN: En la cláusula SELECT (*) -> Es TODO o sino solo el nombre de las columnas que quiera ver
+ y usamos '' par alias de columnas*/
+-- Obtener las marcas y modelos pero solo de las marcas audi y seat
+
+SELECT NomMar AS 'Marca', NomMod AS 'Modelo'
+FROM marca JOIN modelo ON (marca.CodMar=modelo.CodMar);
+
+-- Obtener las marcas y modelos pero solo de las marcas audi y seat
+
+SELECT NomMar AS 'Marca', NomMod AS 'Modelo'
+FROM marca JOIN modelo ON (marca.CodMar=modelo.CodMar)
+WHERE NomMar = 'Audi' OR NomMar = 'Seat' ;
+
+
+CREATE TABLE coche_malaga
+(
+CodCoc INT NOT NULL,
+MatCoc VARCHAR(8) NOT NULL UNIQUE,
+ColCoc VARCHAR(50) NOT NULL DEFAULT 'blanco',
+PueCoc TINYINT NOT NULL,
+CvCoc TINYINT  NOT NULL,
+CilCoc SMALLINT NOT NULL,
+AntCoc DATE NOT NULL,
+CodMod INT NOT NULL,
+PRIMARY KEY (CodCoc),
+FOREIGN KEY (CodMod) REFERENCES modelo(CodMod)
+);
+
+CREATE TABLE coche_sevilla
+(
+CodCoc INT NOT NULL,
+MatCoc VARCHAR(8) NOT NULL UNIQUE,
+ColCoc VARCHAR(50) NOT NULL DEFAULT 'blanco',
+PueCoc TINYINT NOT NULL,
+CvCoc TINYINT  NOT NULL,
+CilCoc SMALLINT NOT NULL,
+AntCoc DATE NOT NULL,
+CodMod INT NOT NULL,
+PRIMARY KEY (CodCoc),
+FOREIGN KEY (CodMod) REFERENCES modelo(CodMod)
+);
+
+INSERT INTO coche_malaga (CodCoc, MatCoc, ColCoc, PueCoc, AntCoc, CvCoc,
+CilCoc, CodMod)
+VALUES (1, '1234AAA', 'rojo', 5, '1995-09-30', 110, 1500, 8),
+(2, '1234AAB', DEFAULT, 11, '1998/03/15', 90, 1400, 4),
+(3, '1234AAC', 'amarillo', 3, '1999/12/07', 80, 2200, 7),
+(4, '1234AAD', 'gris', 5, '2008/05/13', 210, 1600, 1);
+
+INSERT INTO coche_sevilla (CodCoc, MatCoc, ColCoc, PueCoc, AntCoc, CvCoc,
+CilCoc, CodMod)
+VALUES (1, '2234AAA', 'rojo', 5, '1995-09-30', 110, 1500, 8),
+(2, '2234AAB', DEFAULT, 11, '1998/03/15', 90, 1400, 4),
+(3, '2234AAC', 'amarillo', 3, '1999/12/07', 80, 2200, 7),
+(4, '2234AAD', 'negro', 5, '2008/05/13', 210, 1600, 1);
+
+SELECT * 
+FROM coche_malaga;
+
+SELECT * 
+FROM coche_sevilla;
+
+--UNION
+--Obtener los coches de los concesionarios de Málaga y Sevilla
+
+SELECT ColCoc
+FROM coche_malaga
+UNION ALL
+SELECT ColCoc
+FROM coche_sevilla;
+
+--INTERSECCIÓN 
+-- Obtener los colores que están tanto en Málaga como en Sevilla
+
+SELECT ColCoc
+FROM coche_malaga
+INTERSECT
+SELECT ColCoc
+FROM coche_sevilla;
+
+
+-- EXCEPCIÓN
+-- Obtener los colores que están tanto en Málaga y no en Sevilla
+
+SELECT ColCoc
+FROM coche_malaga
+EXCEPT
+SELECT ColCoc
+FROM coche_sevilla;
