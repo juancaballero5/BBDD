@@ -1,15 +1,51 @@
 USE EMPRESA;
 
-/* 1. Hallar el nombre de los empleados que no tienen comisi髇, clasificados
-de manera que aparezca primero aquellos nombres que son m醩 cortos.*/
+/* 1. Hallar el nombre de los empleados que no tienen comisi贸n, clasificados
+de manera que aparezca primero aquellos nombres que son m谩s cortos.*/
 
 SELECT NOMEM
 FROM temple
 WHERE COMIS IS NULL
 ORDER BY LEN (NOMEM);
 
-/* 2. Hallar, por orden alfab閠ico, los nombres de los empleados suprimiendo
-las dos 鷏timas letras. Utiliza alias de columna.*/
+/* 2. Hallar, por orden alfab茅tico, los nombres de los empleados suprimiendo
+las dos 煤ltimas letras. Utiliza alias de columna.*/
 
-SELECT NOMEM
+SELECT LEFT (NOMEM , LEN(NOMEM) - 2)  AS 'Nombre'
 FROM temple
+ORDER BY 1 ASC;
+
+/* 3. Hallar cu谩ntos departamentos hay y el presupuesto anual medio de
+ellos. Utiliza alias de columna.*/
+
+SELECT COUNT(NUMDE) AS 'Departamento', PRESU AS 'Presupuesto'
+FROM tdepto;
+
+/* 4. Hallar la masa salarial anual (salario m谩s comisi贸n) de la empresa (se
+suponen 14 pagas anuales).*/
+
+SELECT (SALAR + ISNULL(COMIS , 0)) * 14 AS 'MasaAnual'
+FROM temple;
+
+/* 5. Obtener el nombre y la masa salarial anual (salario m谩s comisi贸n) de
+cada empleado (se suponen 14 pagas anuales). Ordenar
+ascendentemente por el nombre del empleado. Utiliza alias para las
+columnas y ordenar ascendentemente por el nombre del empleado.
+Hacer el ejercicio de cuatro formas diferentes:*/
+
+-- Utilizando la funci贸n ISNULL.
+
+SELECT NOMEM AS 'Empleado', (SALAR + ISNULL(COMIS , 0)) * 14 AS 'MasaAnual'
+FROM temple
+ORDER BY 1;
+
+-- Utilizando la funci贸n IIF.
+
+SELECT NOMEM AS 'Empleado', IIF(COMIS IS NULL ,SALAR *14 , (SALAR + COMIS) * 14 ) AS 'Masa Anual'
+FROM temple
+ORDER BY 1;
+
+-- Utilizando el operador UNION.
+-- Utilizando una expresi贸n CASE.
+
+
