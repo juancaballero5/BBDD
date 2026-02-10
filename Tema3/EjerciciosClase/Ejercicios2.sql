@@ -33,6 +33,12 @@ ascendentemente por el nombre del empleado. Utiliza alias para las
 columnas y ordenar ascendentemente por el nombre del empleado.
 Hacer el ejercicio de cuatro formas diferentes:*/
 
+SELECT * 
+FROM temple;
+
+SELECT *
+FROM tcentr;
+
 -- Utilizando la función ISNULL.
 
 SELECT NOMEM AS 'Empleado', (SALAR + ISNULL(COMIS , 0)) * 14 AS 'MasaAnual'
@@ -46,6 +52,29 @@ FROM temple
 ORDER BY 1;
 
 -- Utilizando el operador UNION.
+SELECT NOMEM AS 'Empleado', (SALAR + COMIS) * 14 AS 'Masa Anual'
+FROM temple
+WHERE COMIS IS NOT NULL
+UNION
+SELECT NOMEM , SALAR * 14
+FROM temple
+WHERE COMIS IS NULL
+ORDER BY 1;
 -- Utilizando una expresión CASE.
+SELECT NOMEM AS 'Empleado', 
+CASE 
+	WHEN COMIS IS NULL THEN SALAR *14 
+	WHEN COMIS IS NOT NULL THEN (SALAR + COMIS) * 14
+END AS 'Masa Anual'
+FROM temple;
 
 
+/* 6. Hallar cuántos empleados han ingresado en el año actual. Utiliza alias
+de columna.*/
+
+SELECT * 
+FROM temple;
+
+SELECT COUNT(NOMEM) AS 'Empleado'
+FROM temple
+WHERE YEAR(FECIN)= YEAR(GETDATE()) ;
