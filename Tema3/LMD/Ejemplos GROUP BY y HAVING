@@ -1,0 +1,174 @@
+USE empresa;
+
+/*CUANDO USAMOS LA CLŃUSULA GROUP BY, LA EXPRESI”N QUE VA JUNTO
+AL SELECT SOLO ADMITE COMO EXPRESI”N EL/LOS NOMBRE/S 
+DE COLUMNA/S UTILIZADA/S PARA AGRUPAR Y FUNCIONES
+DE AGREGADO.*/
+
+/*EN LA CLŃUSULA HAVING NOS ENCONTRAMOS NORMALMENTE:
+
+FUNCI”N DE AGREGADO OP_RELACIONAL EXPRESI”N.
+
+RECUERDA QUE EXPRESI”N PUEDE SER UN SUBSELECT.
+Y SI EL SUBSELECT PRODUCE MŃS DE UNA FILA, PUEDES
+PONER LAS CLŃUSULAS ALL O ANY. TAMBI…N PODEMOS TENER
+UN PREDICADO PREDICADO IN*/
+
+/*Listar para cada departamento, su número (numde) y el máximo
+salario que se gana dentro de él.*/
+--Vemos los datos que nos interesa de los empleados.
+
+SELECT * 
+FROM temple
+ORDER BY NUMDE;
+
+
+-- SOLUCIÓN 
+
+SELECT NUMDE, MAX(SALAR) 
+FROM temple
+GROUP BY NUMDE
+ORDER BY NUMDE;
+
+/*Listar para cada departamento, su nombre (nomde) y el máximo
+salario que se gana dentro de él.*/
+
+SELECT NOMDE, MAX(SALAR) 
+FROM temple e JOIN tdepto d ON (e.NUMDE = d.NUMDE)
+GROUP BY NOMDE
+ORDER BY NOMDE;
+
+SELECT numem,numde,salar
+FROM temple
+ORDER BY 2;
+
+--SOLUCIÓN:
+SELECT numde, MAX(salar) AS 'Máximo salario del departamento'
+FROM temple
+GROUP BY numde;
+
+/*Igual, pero indicar tambiťn cuántos empleados hay en cada
+departamento. La consulta es solo para los departamentos con
+código superior a 100*/
+
+SELECT NUMDE, MAX(SALAR), COUNT(*)
+FROM temple
+WHERE NUMDE > 100
+GROUP BY numde
+ORDER BY numde;
+
+SELECT numde, COUNT(*) AS 'Nķmero de empleados del dpto.' ,MAX(salar)as 'MŠximo salario del dpto.'
+FROM temple
+WHERE numde > 100
+GROUP BY numde;
+
+--Listar para cada salario cuŠntos empledos los ganan. 
+
+
+SELECT SALAR, COUNT(*) 
+FROM temple
+GROUP BY SALAR
+ORDER BY SALAR;
+
+
+SELECT salar, COUNT(*) AS 'Nķmero de empleados con el mismo salario'
+FROM temple
+GROUP BY salar;
+
+/*Listar para los departamentos con mŠs de dos empleados, 
+su nķmero (numde) y el mŠximo salario.*/
+
+
+SELECT NUMDE, MAX(SALAR) 
+FROM temple
+GROUP BY NUMDE
+HAVING COUNT(*) > 2
+ORDER BY NUMDE;
+
+
+SELECT numde, MAX(salar) AS 'MŠximo salario del departamento'
+FROM temple
+GROUP BY numde
+HAVING COUNT(*)>2
+ORDER BY 1;
+
+--USAMOS TODAS LAS CLŃUSULAS:
+
+/*Listar para cada departamento distinto del 112, su número
+(numde) y el máximo salario que se gana dentro de él.
+Teniendo en cuenta que el departamento debe tener más 
+de dos empleados. */
+
+SELECT NUMDE, MAX(SALAR) 
+FROM temple
+WHERE NUMDE <> 112
+GROUP BY NUMDE
+HAVING COUNT(*) > 2
+ORDER BY NUMDE;
+
+
+
+SELECT numde, MAX(salar)
+FROM temple
+WHERE numde <> 112
+GROUP BY numde
+HAVING COUNT(*)>2
+ORDER BY 1;
+
+--EJEMPLO DE HAVING CON SUBSELECT:
+
+/*Igual que el anterior, pero teniendo en cuenta que el 
+departamento debe tener mŠs empleados que los que 
+tiene el departamento 110 */
+
+
+SELECT numde, MAX(salar)
+FROM temple
+WHERE numde <> 112
+GROUP BY numde
+HAVING COUNT(*) > (SELECT COUNT(*)
+					FROM temple
+					WHERE NUMDE = 110)
+ORDER BY 1;
+
+
+
+SELECT numde, MAX(salar),COUNT(*)
+FROM temple
+WHERE numde <> 112
+GROUP BY numde
+HAVING COUNT(*)> (SELECT COUNT(*) FROM temple WHERE numde=110)
+ORDER BY 1;
+
+--TAMBI…N PODEMOS AGRUPAR POR MŃS DE UNA COLUMNA.
+
+/*Obtener en cada departamento cuŠntas personas 
+hay con el mismo nķmero de hijos*/
+--Vemos los datos que nos interesa de los empleados.
+
+SELECT NUMDE, NUMHI ,COUNT(*) 
+FROM temple
+GROUP BY NUMDE, NUMHI
+ORDER BY NUMDE, NUMHI;
+
+
+
+
+
+
+
+
+
+SELECT numem, numde,numhi 
+FROM temple 
+ORDER BY numde,numhi;
+
+/*AquŪ estamos agrupando por nķmero de departamento y dentro de 
+cada grupo (cada departamento), por nķmero de hijos 
+(igual nķmero de hijos) */
+SELECT numde,numhi,COUNT(*) AS 'nķmero de elementos del grupo'
+FROM temple
+GROUP BY numde,numhi
+ORDER BY 1;
+
+
